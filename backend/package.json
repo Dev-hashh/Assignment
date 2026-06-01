@@ -1,0 +1,22 @@
+{
+  "name": "backend-intern-assignment-api",
+  "version": "1.0.0",
+  "description": "Scalable REST API with JWT authentication, role-based access, tasks CRUD, and API docs.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "test": "node tests/api.test.js"
+  },
+  "keywords": [
+    "rest-api",
+    "jwt",
+    "rbac",
+    "crud"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}

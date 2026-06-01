@@ -1,0 +1,11 @@
+{
+  "name": "backend-intern-assignment",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-stack assignment split into backend and React frontend folders.",
+  "scripts": {
+    "backend": "cd backend && npm start",
+    "backend:test": "cd backend && npm test",
+    "frontend": "cd frontend && npm run dev"
+  }
+}
