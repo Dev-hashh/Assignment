@@ -1,30 +1,97 @@
 # Backend Developer Intern Assignment
 
-This project is split into two folders:
+A full-stack task management application demonstrating secure backend development, JWT authentication, role-based access control, REST API design, frontend integration, API documentation, and deployment readiness.
 
-- `backend/` - versioned REST API with JWT auth, role-based access, tasks CRUD, OpenAPI docs, and a Postgres schema.
-- `frontend/` - React UI for registration, login, protected dashboard access, and task CRUD.
+## Features
 
-## Run The Backend
+### Backend
+
+* JWT Authentication & Authorization
+* PBKDF2 Password Hashing with per-user salts
+* Role-Based Access Control (User/Admin)
+* Versioned REST API (`/api/v1`)
+* Tasks CRUD Operations
+* Request Validation & Error Handling
+* OpenAPI Documentation
+* PostgreSQL Schema
+* Modular & Scalable Architecture
+
+### Frontend
+
+* React + Vite
+* User Registration & Login
+* Protected Dashboard
+* Task Management (Create, Read, Update, Delete)
+* Success & Error Notifications
+* Responsive UI
+
+---
+
+## Project Structure
+
+```text
+.
+├── backend/
+│   ├── src/
+│   ├── db/
+│   ├── docs/
+│   └── tests/
+│
+├── frontend/
+│   ├── src/
+│   └── public/
+│
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+## Screenshots
+
+### Authentication
+
+![Authentication](screenshots/auth.png)
+
+### Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+### API Documentation
+
+![API Docs](screenshots/docs.png)
+
+---
+
+## Local Setup
+
+### Backend
 
 ```bash
 cd backend
+npm install
 npm start
 ```
 
 Backend URLs:
 
-- API root: http://localhost:3000
-- Health check: http://localhost:3000/api/v1/health
-- API docs: http://localhost:3000/docs
-- OpenAPI JSON: http://localhost:3000/openapi.json
+| Resource     | URL                                 |
+| ------------ | ----------------------------------- |
+| API Root     | http://localhost:3000               |
+| Health Check | http://localhost:3000/api/v1/health |
+| API Docs     | http://localhost:3000/docs          |
+| OpenAPI JSON | http://localhost:3000/openapi.json  |
 
-The backend seeds an admin account on first run:
+### Seeded Admin Account
 
-- Email: `admin@example.com`
-- Password: `Admin@12345`
+```text
+Email: admin@example.com
+Password: Admin@12345
+```
 
-## Run The React Frontend
+---
+
+### Frontend
 
 ```bash
 cd frontend
@@ -34,13 +101,27 @@ npm run dev
 
 Frontend URL:
 
-- React app: http://localhost:5174
+```text
+http://localhost:5174
+```
 
-The frontend proxies API calls to the backend at `http://localhost:3000`. To change that, create `frontend/.env` from `frontend/.env.example` and set:
+---
+
+## Docker Setup
+
+Build and run the complete application:
 
 ```bash
-VITE_API_BASE_URL=/api/v1
+docker compose up --build
 ```
+
+Stop containers:
+
+```bash
+docker compose down
+```
+
+---
 
 ## Quick Scripts
 
@@ -52,83 +133,166 @@ npm run backend:test
 npm run frontend
 ```
 
-Run `npm install` inside `frontend/` before starting the React app.
-
-## Backend Features
-
-- User registration and login with PBKDF2 password hashing
-- JWT authentication using `Authorization: Bearer <token>`
-- Role-based access for `user` and `admin`
-- Versioned API under `/api/v1`
-- CRUD APIs for tasks
-- Request validation and consistent JSON errors
-- OpenAPI documentation at `/docs` and `/openapi.json`
-- Postgres schema at `backend/db/schema.sql`
+---
 
 ## API Summary
 
-All API routes are versioned under `/api/v1`.
+All endpoints are versioned under:
 
-| Method | Route | Access | Description |
-| --- | --- | --- | --- |
-| GET | `/health` | Public | Health check |
-| POST | `/auth/register` | Public | Create a user account |
-| POST | `/auth/login` | Public | Login and receive a JWT |
-| GET | `/auth/me` | Authenticated | Get current user profile |
-| GET | `/users` | Admin | List users |
-| GET | `/tasks` | Authenticated | List own tasks, or all tasks for admins |
-| POST | `/tasks` | Authenticated | Create task |
-| GET | `/tasks/:id` | Owner/Admin | Get task |
-| PATCH | `/tasks/:id` | Owner/Admin | Update task |
-| DELETE | `/tasks/:id` | Owner/Admin | Delete task |
+```text
+/api/v1
+```
+
+| Method | Route          | Access        | Description   |
+| ------ | -------------- | ------------- | ------------- |
+| GET    | /health        | Public        | Health Check  |
+| POST   | /auth/register | Public        | Register User |
+| POST   | /auth/login    | Public        | Login         |
+| GET    | /auth/me       | Authenticated | Current User  |
+| GET    | /users         | Admin         | List Users    |
+| GET    | /tasks         | Authenticated | List Tasks    |
+| POST   | /tasks         | Authenticated | Create Task   |
+| GET    | /tasks/:id     | Owner/Admin   | Get Task      |
+| PATCH  | /tasks/:id     | Owner/Admin   | Update Task   |
+| DELETE | /tasks/:id     | Owner/Admin   | Delete Task   |
+
+---
 
 ## Example Requests
 
-Register:
+### Register
 
 ```bash
-curl -X POST http://localhost:3000/api/v1/auth/register ^
-  -H "Content-Type: application/json" ^
-  -d "{\"name\":\"Dev User\",\"email\":\"dev@example.com\",\"password\":\"Password@123\"}"
+curl -X POST http://localhost:3000/api/v1/auth/register \
+-H "Content-Type: application/json" \
+-d '{"name":"Dev User","email":"dev@example.com","password":"Password@123"}'
 ```
 
-Login:
+### Login
 
 ```bash
-curl -X POST http://localhost:3000/api/v1/auth/login ^
-  -H "Content-Type: application/json" ^
-  -d "{\"email\":\"dev@example.com\",\"password\":\"Password@123\"}"
+curl -X POST http://localhost:3000/api/v1/auth/login \
+-H "Content-Type: application/json" \
+-d '{"email":"dev@example.com","password":"Password@123"}'
 ```
 
-Create a task:
+### Create Task
 
 ```bash
-curl -X POST http://localhost:3000/api/v1/tasks ^
-  -H "Content-Type: application/json" ^
-  -H "Authorization: Bearer YOUR_TOKEN" ^
-  -d "{\"title\":\"Build API\",\"description\":\"Finish assignment backend\",\"status\":\"todo\"}"
+curl -X POST http://localhost:3000/api/v1/tasks \
+-H "Authorization: Bearer YOUR_TOKEN" \
+-H "Content-Type: application/json" \
+-d '{"title":"Build API","description":"Finish assignment","status":"todo"}'
 ```
 
-## Database Schema
+---
 
-The runnable backend uses a JSON file repository so the assignment works without installing a database server. A production-ready Postgres schema is included at `backend/db/schema.sql`, and the repository layer is isolated in `backend/src/repositories/store.js` so it can be swapped for Postgres, MySQL, or MongoDB without changing route handlers.
+## Database Design
 
-## Scalability Note
+The application currently uses a lightweight JSON repository for easy evaluation without requiring database installation.
 
-The backend is organized by modules: config, repositories, middleware, routes, utilities, docs, and tests. For a production deployment:
+A production-ready PostgreSQL schema is provided in:
 
-- Replace the JSON repository with Postgres using the schema in `backend/db/schema.sql`.
-- Put the API behind a load balancer and keep instances stateless by storing sessions only as signed JWTs.
-- Add Redis for rate limiting, hot task lists, and short-lived token deny-lists.
-- Add structured logging and centralized metrics.
-- Split modules into services only when traffic or team ownership demands it, for example auth, task management, and notifications.
-- Run migrations in CI/CD and deploy the backend and frontend separately.
+```text
+backend/db/schema.sql
+```
 
-## Security Notes
+The repository layer is isolated and can be replaced with PostgreSQL, MySQL, or MongoDB without modifying route handlers or business logic.
 
-- Passwords are never stored directly; they are hashed with PBKDF2 and per-user salts.
-- JWTs are signed with HMAC SHA-256 and expiration checks.
-- Protected endpoints require a bearer token.
-- Admin routes check the authenticated user role.
-- Inputs are validated before reaching the repository.
-- In production, set a strong `JWT_SECRET`, serve over HTTPS, and consider HTTP-only secure cookies for browser token storage.
+---
+
+## Scalability Considerations
+
+The backend follows a modular architecture:
+
+```text
+config
+middleware
+repositories
+routes
+utilities
+docs
+tests
+```
+
+For production-scale deployments:
+
+* Replace JSON storage with PostgreSQL
+* Deploy behind a load balancer
+* Use Redis for caching and rate limiting
+* Add structured logging and monitoring
+* Implement CI/CD pipelines
+* Scale backend instances horizontally
+* Separate services only when traffic or ownership requires it
+
+---
+
+## Security
+
+* PBKDF2 Password Hashing
+* Per-user Salts
+* JWT Authentication
+* Role-Based Authorization
+* Request Validation
+* Consistent Error Responses
+* Protected Routes
+* Input Sanitization
+
+Production recommendations:
+
+* HTTPS Everywhere
+* Strong JWT Secret
+* Secure HTTP-only Cookies
+* Centralized Secrets Management
+* Rate Limiting
+* Audit Logging
+
+---
+
+## Tech Stack
+
+### Backend
+
+* Node.js
+* Native HTTP Server
+* JWT
+* OpenAPI 3.0
+
+### Frontend
+
+* React 19
+* Vite
+
+### Database
+
+* PostgreSQL Schema
+* JSON Repository (Development)
+
+### Deployment
+
+* Docker
+* Docker Compose
+
+---
+
+## Assignment Requirements Coverage
+
+| Requirement                 | Status |
+| --------------------------- | ------ |
+| User Registration & Login   | ✅      |
+| Password Hashing            | ✅      |
+| JWT Authentication          | ✅      |
+| Role-Based Access Control   | ✅      |
+| CRUD APIs                   | ✅      |
+| API Versioning              | ✅      |
+| Validation & Error Handling | ✅      |
+| API Documentation           | ✅      |
+| Database Schema             | ✅      |
+| Frontend Integration        | ✅      |
+| Protected Dashboard         | ✅      |
+| Scalability Note            | ✅      |
+| Docker Support              | ✅      |
+
+---
+
+Built as part of the Backend Developer Intern Assignment.
